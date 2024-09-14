@@ -1,0 +1,69 @@
+// Este código esta a todo publico para poder editarlo o modificarlo a su gusto
+// Este código esta orientado a mostrar un texto incial el cual se moverá de arriba a abajo, otro el cuál se moverá de izquiera a derecha y finalmente una imagen en la cual apararecera
+duarente cierto tiempo el cual puede ser modificado.
+Este código requiere de una librería llamada "Adafruit_SSD1306", la cual cabe aclarar es para controlar pantallas OLED de diferentes tamaños esta se puede encontrar buscando en el
+gestor de bibliotecas con el nobre antes mencionado, está al instalarla le mencioanra que nececitara instalar extensiones de la misma para funcionar correctamente, solo se le dabe dar
+aceptar y listo ya podrá controlar su pantalla mostrar texto y una imagen en su pantalla OLED :3.
+
+// This code is open to the public so you can edit or modify it to your liking
+// This code is oriented to display an initial text which will move from top to bottom, another which will move from left to right and finally an image in which it will appear
+during a certain period of time which can be modified.
+This code requires a library called "Adafruit_SSD1306", which it is worth clarifying is to control OLED screens of different sizes, this can be found by searching in the
+library manager with the aforementioned name, when installing it it mentions that you will need to install its extensions to function correctly, you just have to click
+accept and that's it, you can now control your screen, show text and an image on your OLED screen :3.
+
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Definición del ancho y alto de la pantalla OLED
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+// Definición del objeto de la pantalla OLED con I2C
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+// Imágen de ejemplo en formato de matriz de bits (bitmap)
+const unsigned char PROGMEM imagen_array[] = {
+ Pegar array de imaagen de bits en este espacio 
+};
+
+void setup() {
+  // Inicializa la pantalla OLED
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // 0x3C es la dirección I2C
+    Serial.println(F("Error al inicializar OLED"));
+    for(;;); // Loop infinito en caso de error
+  }
+  
+  display.clearDisplay(); // Limpia la pantalla
+  display.display();
+}
+
+void loop() {
+  // Texto desplazándose de izquierda a derecha
+  for (int x = SCREEN_WIDTH; x >= -100; x--) { // Ajusta el valor -100 según la longitud del texto
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(x, 10);
+    display.print(F("Pega tu texto aquí"));
+    display.display();
+    delay(20); // Ajusta el retraso para controlar la velocidad
+  }
+
+  // Texto desplazándose de arriba a abajo
+  for (int y = -10; y <= SCREEN_HEIGHT; y++) {
+    display.clearDisplay();
+    display.setCursor(10, y);
+    display.print(F("Pega tu texto aquí"));
+    display.display();
+    delay(20); // Ajusta el retraso para controlar la velocidad
+  }
+
+  // Mostrar una imagen
+  display.clearDisplay();
+  display.drawBitmap(0, 0, imagen_array, 128, 64, SSD1306_WHITE); // 8x8 es el tamaño del bitmap de ejemplo
+  display.display();
+  delay(2000); // Pausa de 2 segundos
+}
